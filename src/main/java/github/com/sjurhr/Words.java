@@ -3,108 +3,51 @@ package github.com.sjurhr;
 import java.util.*;
 
 public class Words {
-    private Map<Character, List<Integer>> letterMap;
     private String solution;
-    private int[][] guesses;
-    private int guessNumber = 0;
-    private int rounds;
-    private int wordLength;
 
-    public Words(String solution, int rounds, int wordLength){
+    public Words(String solution){
         this.solution = solution;
-        this.letterMap = makeWord(solution);
-        this.rounds = rounds;
-        this.wordLength = wordLength;
-        this.guesses = new int[rounds][wordLength];
     }
 
-    private HashMap<Character, List<Integer>> makeWord(String input){
-        HashMap<Character, List<Integer>> res = new HashMap<>();
-        input = format(input);
+    public void checkGuess(String guess) {
+        char[] wordArr = this.solution.toCharArray();
+        char[] guessArr = format(guess).toCharArray();
+        Map<Character, Integer> count = new HashMap<>();
+        Map<Character, Integer> counter = new HashMap<>();
 
-        for(int i = 0; i < input.toCharArray().length; i++){
-            res.computeIfAbsent(input.charAt(i), k -> new ArrayList<>()).add(i);
+        for(int i = 0; i < wordArr.length; i++){
+            if(wordArr[i] == guessArr[i]){
+                wordArr[i] = '0';
+                guessArr[i] = '0';
+            } else {
+                count.merge(wordArr[i], 1, Integer::sum);
+            }
         }
-        return  res;
-    }
 
-    public void checkGuess(String guess){
-        guess = format(guess);
-        char[] guessChar = guess.toCharArray();
-        Map<Character, Integer> letterCount = new HashMap<>();
-
-        for(int i = 0; i < guessChar.length; i++){
-            boolean contains = false;
-            boolean rightPos = false;
-            if(letterMap.get(guessChar[i]) != null){
-                contains = true;
-                if(letterMap.get(guessChar[i]).contains(i)){
-                    rightPos = true;
-                    contains = false;
+        for(int i = 0; i < guessArr.length; i++){
+            if(guessArr[i] != '0'){
+                for(int j = 0; j < wordArr.length; j++){
+                    int countere = counter.get(guessArr[i]) != null ? counter.get(guessArr[i]): 0 ;
+                    int counts = count.get(guessArr[i]) != null ? count.get(guessArr[i]) : 0;
+                    if (guessArr[i] == wordArr[j] && counts > countere){
+                        counter.merge(guessArr[i],1, Integer::sum);
+                        guessArr[i] = '1';
+                        break;
+                    }
+                }
+                if(guessArr[i] != '1') {
+                    guessArr[i] = '3';
                 }
             }
-            letterCount.put(guessChar[i], +1);
-            if (rightPos){
-                guesses[guessNumber][i] = 0;
-            } else if(contains){
-                guesses[guessNumber][i] = 1;
-            }else {
-                guesses[guessNumber][i] = 2;
-            }
         }
-        guessNumber++;
-    }
-    public void checkGuessV2(String guess){
-        Map<Character, List<Integer>> guessMap = makeWord(guess);
-        Set<Character> commonKeys = new HashSet<>(guessMap.keySet());
-        commonKeys.retainAll(letterMap.keySet());
 
-        Map<Integer, List<Integer>> outPut = new HashMap<>();
-
-        for(char c : commonKeys){
-            List<Integer> guessChars = guessMap.get(c);
-            List<Integer> solutionChars = letterMap.get(c);
-            List<Integer> common = new ArrayList<>(solutionChars);
-
-            common.retainAll(guessChars);
-            for(int x : common){
-                outPut.computeIfAbsent(1, k -> new ArrayList<>()).add(0);
-                System.out.println("MARK POS " + x +" as green");
-            }
-
-            if(guessChars.size() > common.size()){
-                outPut.computeIfAbsent(1, k -> new ArrayList<>()).add(1);
-            }
-
-            //[3][4]  [3][5]
+        for(int i = 0; i < guessArr.length; i++) {
+            System.out.print(" " + guessArr[i] + " ");
         }
-        System.out.println(outPut.get(1));
     }
+
     private String format(String word){
         return word.trim().toLowerCase();
     }
 
-    public Map<Character, List<Integer>> getLetterMap() {
-        return letterMap;
-    }
-
-    public int[][] getGuesses() {
-        return guesses;
-    }
-
-    public int getGuessNumber() {
-        return guessNumber;
-    }
-
-    public String getSolution() {
-        return solution;
-    }
-
-    public int getRounds() {
-        return rounds;
-    }
-
-    public int getWordLength() {
-        return wordLength;
-    }
 }
