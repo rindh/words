@@ -1,15 +1,33 @@
 package github.com.sjurhr;
 
+import github.com.sjurhr.Exceptions.AZException;
+import github.com.sjurhr.Exceptions.IncorrectSizeException;
+
 import java.util.*;
 
 public class Words {
     private String solution;
+    private Result result;
 
-    public Words(String solution){
-        this.solution = solution;
+    private final String regexAtoZ = "[A-Za-z]+";
+
+    public Words(String solution) throws AZException {
+        if(!solution.matches(regexAtoZ)){
+            throw new AZException("can only contain letters a-z");
+        }
+        this.solution = format(solution);
+        this.result = new Result();
     }
 
-    public void checkGuess(String guess) {
+    public Result checkGuess(String guess) throws IncorrectSizeException, AZException {
+
+        if(solution.length() != guess.length()){
+            throw new IncorrectSizeException("Lenght of guess words does not match solution.");
+        }
+        if(!guess.matches(regexAtoZ)){
+            throw new AZException("can only contain letters a-z");
+        }
+
         char[] wordArr = this.solution.toCharArray();
         char[] guessArr = format(guess).toCharArray();
         Map<Character, Integer> count = new HashMap<>();
@@ -36,18 +54,28 @@ public class Words {
                     }
                 }
                 if(guessArr[i] != '1') {
-                    guessArr[i] = '3';
+                    guessArr[i] = '2';
                 }
             }
         }
-
-        for(int i = 0; i < guessArr.length; i++) {
+        for (int i = 0; i< guessArr.length; i++){
             System.out.print(" " + guessArr[i] + " ");
         }
+        System.out.print("\n");
+
+        result.addResult(guessArr);
+        return result;
     }
 
     private String format(String word){
         return word.trim().toLowerCase();
     }
 
+    public String getSolution() {
+        return solution;
+    }
+
+    public Result getResult() {
+        return result;
+    }
 }

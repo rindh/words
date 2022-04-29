@@ -1,56 +1,42 @@
 package github.com.sjurhr;
 
+import github.com.sjurhr.Exceptions.AZException;
+import github.com.sjurhr.Exceptions.IncorrectSizeException;
 import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class WordsTest {
-/*
+
     @Test
-    public void test_make_word(){
-        Words words = new Words("Hello", 6,6);
-        int[][] guesses = words.getGuesses();
-        assertEquals(words.getGuesses().length, 6);
-        for (int i = 0; i < guesses.length; i++){
-            for(int j = 0; j < guesses[i].length; j++){
-                assertEquals(guesses[i][j], 0);
-            }
-        }
-        assertEquals(words.getGuessNumber(), 0);
+    public void test_format() throws AZException {
+        Words w = new Words("HelLo");
+        assertTrue(w.getSolution().equals("hello"));
     }
 
     @Test
-    public void test_checkGuess(){
-        Words words = new Words("Hello", 6,5);
-
-        int[][] guesses = words.getGuesses();
-        for (int i = 0; i <= 0; i++){
-            for(int j = 0; j < guesses[i].length; j++){
-                assertEquals(2, guesses[i][j]);
-            }
-        }
-        assertEquals(words.getGuessNumber(), 1);
-        words.checkGuess("hiomb");
-
-        for (int i = 0; i <= 0; i++){
-            for(int j = 0; j < guesses[i].length; j++){
-                if(j == 0 && i == 1){
-                    assertEquals(0, guesses[i][j]);
-                }
-                assertEquals(2, guesses[i][j]);
-            }
-        }
-        assertEquals(words.getGuessNumber(), 2);
-        words.checkGuess("hello");
-        for (int i = 0; i <= 0; i++){
-            for(int j = 0; j < guesses[i].length; j++){
-                if(i == 2){
-                    assertEquals(0, guesses[i][j]);
-                }
-                assertEquals(2, guesses[i][j]);
-            }
+    public void test_make_word() throws Exception{
+        Words words = new Words("Hello");
+        List<Status> expected = Arrays.asList(Status.R, Status.N, Status.W, Status.R, Status.W);
+        words.checkGuess("hdell");
+        assertTrue(words.getResult().results.size() == 1);
+        for(int i = 0; i < 5; i++) {
+            assertEquals(words.getResult().results.get(0).get(i), expected.get(i));
         }
     }
 
- */
+    @Test
+    public void test_IncorrectSizeException() throws Exception{
+        Words words = new Words("Hello");
+        assertThrows(IncorrectSizeException.class, () -> words.checkGuess("hellos"));
+    }
+
+    @Test
+    public void test_AZException() throws Exception{
+        Words words = new Words("Hello");
+        assertThrows(AZException.class, () -> words.checkGuess("h3llo"));
+    }
 }
