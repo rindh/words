@@ -6,7 +6,7 @@
 
     <groupId>org.example</groupId>
     <artifactId>words</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -21,4 +21,12 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub sjurhr Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/sjurhr/words</url>
+        </repository>
+    </distributionManagement>
 </project>
